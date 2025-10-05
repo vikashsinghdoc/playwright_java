@@ -1,0 +1,9 @@
+package com.playwright.framework;
+
+import io.cucumber.spring.CucumberContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@CucumberContextConfiguration
+@SpringBootTest(classes = FrameworkApplication.class)
+public class CucumberSpringConfiguration {
+}

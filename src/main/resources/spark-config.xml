@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extentreports>
+    <configuration>
+        <theme>DARK</theme>
+        <encoding>UTF-8</encoding>
+        <protocol>HTTPS</protocol>
+        <timelineEnabled>true</timelineEnabled>
+        <enableOfflineMode>false</enableOfflineMode>
+        <enableBase64>true</enableBase64>
+        <thumbnailForBase64>true</thumbnailForBase64>
+        <documentTitle>Playwright Automation Execution Result</documentTitle>
+        <reportName>Automation Test Result</reportName>
+        <timeStampFormat>MMM dd, yyyy HH:mm:ss</timeStampFormat>
+    </configuration>
+</extentreports>
