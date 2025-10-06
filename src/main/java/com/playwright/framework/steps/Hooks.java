@@ -14,18 +14,20 @@ public class Hooks {
 
     @Before
     public void setupDriver(){
-        playwrightDriver.playwrightDriverCreation();
-        Log.info("SKIPPED");
+        this.playwrightDriver.playwrightDriverCreation();
+        Log.info("******************************** Created Playwright Driver Successfully **************************************");
     }
     @After
     public void tearDown(Scenario scenario) {
         if (scenario.isFailed()) {
-            byte[] screenshot = PlaywrightDriver.getPage().screenshot();
+            Log.info("******************************** Scenario Failed, Capturing Screenshot *******************************");
+            byte[] screenshot = this.playwrightDriver.getPage().screenshot();
             scenario.attach(screenshot, "image/png", "Failed_Screenshot");
+            Log.info("******************************** Screenshot Captured Successfully *******************************");
         }
-        PlaywrightDriver.saveVideoForScenario(scenario.getName());
-        PlaywrightDriver.closeBrowser();
-        PlaywrightDriver.quitPlaywright();
-
+        this.playwrightDriver.saveVideoForScenarioWithScenarioNames(scenario.getName());
+        this.playwrightDriver.closeBrowser();
+        this.playwrightDriver.quitPlaywright();
+        Log.info("******************************** Closed Browser,Playwright driver Successfully *******************************");
     }
 }
