@@ -1,11 +1,12 @@
 package com.playwright.framework.pages;
 
+import com.playwright.framework.base.BasePage;
 import com.playwright.framework.utils.PlaywrightDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CarDetailsPage {
+public class CarDetailsPage extends BasePage {
     @Autowired
     private PlaywrightDriver playwrightDriver;
 

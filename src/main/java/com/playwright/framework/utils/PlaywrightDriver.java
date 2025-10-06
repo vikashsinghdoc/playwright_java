@@ -2,7 +2,6 @@ package com.playwright.framework.utils;
 
 import com.microsoft.playwright.*;
 import com.playwright.framework.log.Log;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +44,7 @@ public class PlaywrightDriver {
         try {
             // Load OR.properties
             this.fis = new FileInputStream("src/main/resources/repositories/OR.properties");
-            this.OR.load(fis);
+            OR.load(fis);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load properties", e);
         }
