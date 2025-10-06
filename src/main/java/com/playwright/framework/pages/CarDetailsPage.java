@@ -1,7 +1,7 @@
 package com.playwright.framework.pages;
 
 import com.playwright.framework.base.BasePage;
-import com.playwright.framework.utils.PlaywrightDriver;
+import com.playwright.framework.driver_manager.PlaywrightDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

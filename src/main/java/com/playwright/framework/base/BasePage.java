@@ -6,7 +6,7 @@ import com.microsoft.playwright.options.SelectOption;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.Assert;
 import com.playwright.framework.log.Log;
-import com.playwright.framework.utils.PlaywrightDriver;
+import com.playwright.framework.driver_manager.PlaywrightDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

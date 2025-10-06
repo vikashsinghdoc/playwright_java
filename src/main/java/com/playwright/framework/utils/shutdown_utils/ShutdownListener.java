@@ -1,6 +1,6 @@
-package com.playwright.framework.utils;
+package com.playwright.framework.utils.shutdown_utils;
 
-import com.playwright.framework.reporting.FileMoverAndDeleteFolder;
+import com.playwright.framework.utils.report_utils.ReportDirectoryMergerAndCleaner;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class ShutdownListener {
     public void handleContextClosedEvent(ContextClosedEvent event) {
         System.out.println("🛑 Spring context is closing. Running file cleanup...");
         try {
-            FileMoverAndDeleteFolder.main(new String[]{}); // call your existing main method
+            ReportDirectoryMergerAndCleaner.main(new String[]{});
         } catch (Exception e) {
             e.printStackTrace();
         }
