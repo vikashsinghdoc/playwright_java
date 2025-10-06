@@ -1,6 +1,10 @@
 package com.playwright.framework.utils;
 
 import com.microsoft.playwright.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,12 +13,18 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
-
+@Component
 public class PlaywrightDriver {
 
     public static PlaywrightDriver playwrightDriver;
     public static Properties OR = new Properties();
-    public static Properties config = new Properties();
+    @Value("${headless:false}")
+    private String headless;
+    @Value("${browser:chrome}")
+    private String browserName;
+    @Value("${video.recording:false}")
+    private String isVideoRecording;
+
     private static FileInputStream fis;
 
     // ThreadLocal instances for parallel execution
@@ -32,16 +42,12 @@ public class PlaywrightDriver {
     public static BrowserContext getBrowserContext() { return bc.get(); }
     public static Page getPage() { return pg.get(); }
 
-    // Private constructor
-    private PlaywrightDriver() {
+
+    public void playwrightDriverCreation() {
         try {
             // Load OR.properties
             fis = new FileInputStream("src/main/resources/properties/OR.properties");
             OR.load(fis);
-
-            // Load config.properties
-            fis = new FileInputStream("src/main/resources/properties/config.properties");
-            config.load(fis);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load properties", e);
         }
@@ -56,21 +62,20 @@ public class PlaywrightDriver {
         pw.set(Playwright.create());
 
         // Launch browser based on config
-        String browserName = config.getProperty("browser", "chrome").toLowerCase();
         Browser browser;
         switch (browserName) {
             case "chrome" -> browser = getPlaywright().chromium()
                     .launch(new BrowserType.LaunchOptions()
                             .setChannel("chrome")
-                            .setHeadless(Boolean.parseBoolean(config.getProperty("headless", "false"))));
+                            .setHeadless(Boolean.parseBoolean(headless)));
             case "firefox" -> browser = getPlaywright().firefox()
                     .launch(new BrowserType.LaunchOptions()
                             .setChannel("firefox")
-                            .setHeadless(Boolean.parseBoolean(config.getProperty("headless", "false"))));
+                            .setHeadless(Boolean.parseBoolean(headless)));
             case "webkit" -> browser = getPlaywright().webkit()
                     .launch(new BrowserType.LaunchOptions()
                             .setChannel("webkit")
-                            .setHeadless(Boolean.parseBoolean(config.getProperty("headless", "false"))));
+                            .setHeadless(Boolean.parseBoolean(headless)));
             default -> throw new IllegalArgumentException("Browser name is incorrect or not supported");
         }
         br.set(browser);
@@ -84,24 +89,15 @@ public class PlaywrightDriver {
             throw new RuntimeException("Failed to create execution/videos folder", e);
         }
 
-        // Set Extent report path system property (so Index.html will go into this folder)
-        System.setProperty("extent.reporter.spark.out", executionFolder.resolve("Index.html").toString());
-
         // Create BrowserContext with optional video recording
         Browser.NewContextOptions contextOptions = new Browser.NewContextOptions();
-        if (config.getProperty("setVideoRecording", "false").equalsIgnoreCase("true")) {
+        if (isVideoRecording.equalsIgnoreCase("true")) {
             contextOptions.setRecordVideoDir(videosFolder);
         }
         BrowserContext browserContext = browser.newContext(contextOptions);
         bc.set(browserContext);
 
-        // Create page
         pg.set(browserContext.newPage());
-    }
-
-    // Setup driver
-    public static void setUpDriver() {
-        playwrightDriver = new PlaywrightDriver();
     }
 
     // Open page

@@ -1,6 +1,6 @@
 package com.playwright.framework.steps;
 
-import com.playwright.framework.base.BasePage;
+import com.playwright.framework.base.CarBase;
 import com.playwright.framework.log.Log;
 import com.playwright.framework.pages.HomePage;
 import com.playwright.framework.pages.NewCarsPage;
@@ -9,21 +9,24 @@ import io.cucumber.java.en.Given;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 
 public class CarwaleSteps {
     @Autowired
     private HomePage homePage;
-   NewCarsPage newCarsPage=new NewCarsPage();
+    @Autowired
+    private NewCarsPage newCarsPage;
+    @Autowired
+    private CarBase carBase;
+   ;
 
-   @Value("${spring.application.name}")
-   private String appNAme;
+   @Value("${base.url}")
+   private String appUrl;
 
     @Given("user navigates to carlwale website")
     public void user_navigates_to_carlwale_website() {
-        PlaywrightDriver.openPage(PlaywrightDriver.config.getProperty("testSite"));
-        Log.info(appNAme);
+        PlaywrightDriver.openPage(appUrl);
+        Log.info(PlaywrightDriver.getPage().locator("[data-skin='title-black']").innerText());
     }
     @Given("user mouseHovers on newcars")
     public void user_mouse_hovers_on_newcars() {
@@ -32,7 +35,6 @@ public class CarwaleSteps {
     @Given("user clicks on findnewcars link")
     public void user_clicks_on_findnewcars_link() throws InterruptedException {
         homePage.clickFindNewCars();
-        Thread.sleep(2000);
     }
     @Given("user clicks on {string}")
     public void user_clicks_on(String carBrand) {
@@ -54,12 +56,7 @@ public class CarwaleSteps {
     }
     @Given("User validates car title as {string}")
     public void user_validates_car_title_as(String carTitle) {
-        Assert.assertEquals(carTitle, BasePage.carBase.getCarTitle());
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        Assert.assertEquals(carTitle, carBase.getCarTitle());
     }
 
 

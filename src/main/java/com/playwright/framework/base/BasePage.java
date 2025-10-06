@@ -5,21 +5,15 @@ import com.microsoft.playwright.options.SelectOption;
 import org.junit.Assert;
 import com.playwright.framework.log.Log;
 import com.playwright.framework.utils.PlaywrightDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BasePage {
 
-    public static Page page;
-    public static CarBase carBase;
-
-    public BasePage() {
-        this.page= PlaywrightDriver.getPage();
-        carBase=new CarBase(this.page);
-    }
     public void click(String locatorKey){
         try {
-            page.locator(PlaywrightDriver.OR.getProperty(locatorKey)).click();
+            PlaywrightDriver.getPage().locator(PlaywrightDriver.OR.getProperty(locatorKey)).click();
             Log.info("Successfully clicked on:"+locatorKey);
         } catch (Throwable tx){
             Log.error("Failed to click on:"+locatorKey);
@@ -28,7 +22,7 @@ public class BasePage {
     }
     public void mouseHover(String locatorKey){
         try {
-            page.hover(PlaywrightDriver.OR.getProperty(locatorKey));
+            PlaywrightDriver.getPage().hover(PlaywrightDriver.OR.getProperty(locatorKey));
             Log.info("Successfully Mouse Hovered on:"+locatorKey);
         } catch (Throwable tx){
             Log.error("Failed to Mouse Hovered on:"+locatorKey);
@@ -37,7 +31,7 @@ public class BasePage {
     }
     public void isElementVisible(String locatorKey){
         try {
-            page.waitForSelector(PlaywrightDriver.OR.getProperty(locatorKey),
+            PlaywrightDriver.getPage().waitForSelector(PlaywrightDriver.OR.getProperty(locatorKey),
                     new Page.WaitForSelectorOptions().setTimeout(2000));
             Log.info("Element "+ locatorKey+" is Visible.");
         } catch (Throwable tx){
@@ -47,7 +41,7 @@ public class BasePage {
     }
     public void type(String locatorKey, String value){
         try {
-            page.locator(PlaywrightDriver.OR.getProperty(locatorKey)).fill(value);
+            PlaywrightDriver.getPage().locator(PlaywrightDriver.OR.getProperty(locatorKey)).fill(value);
             Log.info("Successfully typed in:"+locatorKey);
         } catch (Throwable tx){
             Log.error("failed to typed in:"+locatorKey);
@@ -56,7 +50,7 @@ public class BasePage {
     }
     public void select(String locatorKey, String value){
         try {
-            page.selectOption(PlaywrightDriver.OR.getProperty(locatorKey), new SelectOption().setLabel(value));
+            PlaywrightDriver.getPage().selectOption(PlaywrightDriver.OR.getProperty(locatorKey), new SelectOption().setLabel(value));
             Log.info("Successfully selected option:"+locatorKey+" in Dropdown");
         } catch (Throwable tx){
             Log.error("Failed to select option:"+locatorKey+" in Dropdown");
