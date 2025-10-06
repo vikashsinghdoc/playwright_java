@@ -10,10 +10,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BasePage {
+    @Autowired
+    private PlaywrightDriver playwrightDriver;
 
     public void click(String locatorKey){
         try {
-            PlaywrightDriver.getPage().locator(PlaywrightDriver.OR.getProperty(locatorKey)).click();
+            this.playwrightDriver.getPage().locator(PlaywrightDriver.OR.getProperty(locatorKey)).click();
             Log.info("Successfully clicked on:"+locatorKey);
         } catch (Throwable tx){
             Log.error("Failed to click on:"+locatorKey);
@@ -22,7 +24,7 @@ public class BasePage {
     }
     public void mouseHover(String locatorKey){
         try {
-            PlaywrightDriver.getPage().hover(PlaywrightDriver.OR.getProperty(locatorKey));
+            this.playwrightDriver.getPage().hover(PlaywrightDriver.OR.getProperty(locatorKey));
             Log.info("Successfully Mouse Hovered on:"+locatorKey);
         } catch (Throwable tx){
             Log.error("Failed to Mouse Hovered on:"+locatorKey);
@@ -31,7 +33,7 @@ public class BasePage {
     }
     public void isElementVisible(String locatorKey){
         try {
-            PlaywrightDriver.getPage().waitForSelector(PlaywrightDriver.OR.getProperty(locatorKey),
+            this.playwrightDriver.getPage().waitForSelector(PlaywrightDriver.OR.getProperty(locatorKey),
                     new Page.WaitForSelectorOptions().setTimeout(2000));
             Log.info("Element "+ locatorKey+" is Visible.");
         } catch (Throwable tx){
@@ -41,7 +43,7 @@ public class BasePage {
     }
     public void type(String locatorKey, String value){
         try {
-            PlaywrightDriver.getPage().locator(PlaywrightDriver.OR.getProperty(locatorKey)).fill(value);
+            this.playwrightDriver.getPage().locator(PlaywrightDriver.OR.getProperty(locatorKey)).fill(value);
             Log.info("Successfully typed in:"+locatorKey);
         } catch (Throwable tx){
             Log.error("failed to typed in:"+locatorKey);
@@ -50,7 +52,7 @@ public class BasePage {
     }
     public void select(String locatorKey, String value){
         try {
-            PlaywrightDriver.getPage().selectOption(PlaywrightDriver.OR.getProperty(locatorKey), new SelectOption().setLabel(value));
+            this.playwrightDriver.getPage().selectOption(PlaywrightDriver.OR.getProperty(locatorKey), new SelectOption().setLabel(value));
             Log.info("Successfully selected option:"+locatorKey+" in Dropdown");
         } catch (Throwable tx){
             Log.error("Failed to select option:"+locatorKey+" in Dropdown");

@@ -1,6 +1,8 @@
 package com.playwright.framework.utils;
 
 import com.microsoft.playwright.*;
+import com.playwright.framework.log.Log;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,62 +24,62 @@ public class PlaywrightDriver {
     private String browserName;
     @Value("${video.recording:false}")
     private String isVideoRecording;
-    private static FileInputStream fis;
-    // ThreadLocal instances for parallel execution
-    private static ThreadLocal<Playwright> pw = new ThreadLocal<>();
+    private FileInputStream fis;
+
+    private ThreadLocal<Playwright> pw = new ThreadLocal<>();
     private static ThreadLocal<Browser> br = new ThreadLocal<>();
     private static ThreadLocal<BrowserContext> bc = new ThreadLocal<>();
     private static ThreadLocal<Page> pg = new ThreadLocal<>();
 
     // Global execution timestamp
-    public static String executionStartTime;
+    public String executionStartTime;
 
     // Getters
-    public static Playwright getPlaywright() { return pw.get(); }
-    public static Browser getBrowser() { return br.get(); }
-    public static BrowserContext getBrowserContext() { return bc.get(); }
-    public static Page getPage() { return pg.get(); }
+    public Playwright getPlaywright() { return pw.get(); }
+    public Browser getBrowser() { return br.get(); }
+    public BrowserContext getBrowserContext() { return bc.get(); }
+    public Page getPage() { return pg.get(); }
 
 
     public void playwrightDriverCreation() {
         try {
             // Load OR.properties
-            fis = new FileInputStream("src/main/resources/repositories/OR.properties");
-            OR.load(fis);
+            this.fis = new FileInputStream("src/main/resources/repositories/OR.properties");
+            this.OR.load(fis);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load properties", e);
         }
 
         // Initialize global execution timestamp if not already set
-        if (executionStartTime == null) {
+        if (this.executionStartTime == null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MMM-yy_HH-mm");
-            executionStartTime = LocalDateTime.now().format(formatter);
+            this.executionStartTime = LocalDateTime.now().format(formatter);
         }
 
         // Initialize Playwright
-        pw.set(Playwright.create());
+        this.pw.set(Playwright.create());
 
         // Launch browser based on config
         Browser browser;
-        switch (browserName) {
+        switch (this.browserName) {
             case "chrome" -> browser = getPlaywright().chromium()
                     .launch(new BrowserType.LaunchOptions()
                             .setChannel("chrome")
-                            .setHeadless(Boolean.parseBoolean(headless)));
+                            .setHeadless(Boolean.parseBoolean(this.headless)));
             case "firefox" -> browser = getPlaywright().firefox()
                     .launch(new BrowserType.LaunchOptions()
                             .setChannel("firefox")
-                            .setHeadless(Boolean.parseBoolean(headless)));
+                            .setHeadless(Boolean.parseBoolean(this.headless)));
             case "webkit" -> browser = getPlaywright().webkit()
                     .launch(new BrowserType.LaunchOptions()
                             .setChannel("webkit")
-                            .setHeadless(Boolean.parseBoolean(headless)));
+                            .setHeadless(Boolean.parseBoolean(this.headless)));
             default -> throw new IllegalArgumentException("Browser name is incorrect or not supported");
         }
         br.set(browser);
 
         // Create execution folder + videos folder
-        Path executionFolder = Paths.get("target", "Execution_" + executionStartTime);
+        Path executionFolder = Paths.get("target", "Execution_" + this.executionStartTime);
         Path videosFolder = executionFolder.resolve("videos");
         try {
             Files.createDirectories(videosFolder);
@@ -87,7 +89,7 @@ public class PlaywrightDriver {
 
         // Create BrowserContext with optional video recording
         Browser.NewContextOptions contextOptions = new Browser.NewContextOptions();
-        if (isVideoRecording.equalsIgnoreCase("true")) {
+        if (this.isVideoRecording.equalsIgnoreCase("true")) {
             contextOptions.setRecordVideoDir(videosFolder);
         }
         BrowserContext browserContext = browser.newContext(contextOptions);
@@ -96,25 +98,20 @@ public class PlaywrightDriver {
         pg.set(browserContext.newPage());
     }
 
-    // Open page
-    public static void openPage(String url) {
-        getPage().navigate(url);
-    }
-
     // Close page, context, and browser safely
-    public static void closeBrowser() {
+    public void closeBrowser() {
         if (getPage() != null) getPage().close();
         if (getBrowserContext() != null) getBrowserContext().close();
         if (getBrowser() != null) getBrowser().close();
     }
 
     // Quit Playwright
-    public static void quitPlaywright() {
+    public void quitPlaywright() {
         if (getPlaywright() != null) getPlaywright().close();
     }
 
     // Save video per scenario
-    public static void saveVideoForScenario(String scenarioName) {
+    public void saveVideoForScenarioWithScenarioNames(String scenarioName) {
         try {
             Page page = getPage();
             if (page == null || page.video() == null) return;
@@ -123,9 +120,10 @@ public class PlaywrightDriver {
             String sanitizedName = scenarioName.replaceAll("[^a-zA-Z0-9_]", "_") + ".webm";
 
             Path originalVideoPath = page.video().path();
-            Path targetPath = Paths.get("target", "Execution_" + executionStartTime, "videos", sanitizedName);
+            Path targetPath = Paths.get("target", "Execution_" + this.executionStartTime, "videos", sanitizedName);
 
             Files.move(originalVideoPath, targetPath);
+            Log.info("Videos saved to: " + targetPath);
         } catch (Exception e) {
             e.printStackTrace();
         }

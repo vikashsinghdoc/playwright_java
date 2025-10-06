@@ -26,30 +26,33 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.junit.platform:junit-platform-launcher'
-	testImplementation 'junit:junit:4.13.2'
+
+	// Lombok
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 
 
 	// Playwright
-	implementation 'com.microsoft.playwright:playwright:1.55.0'
+	implementation ("com.microsoft.playwright:playwright:${playwright_version}")
 
 	// Cucumber (JUnit 5)
-	implementation 'io.cucumber:cucumber-java:7.30.0'
-	implementation "io.cucumber:cucumber-junit:7.30.0"
-	implementation 'io.cucumber:cucumber-spring:7.30.0'
+	implementation ("io.cucumber:cucumber-java:${cucumber_version}")
+	implementation ("io.cucumber:cucumber-junit:${cucumber_version}")
+	implementation ("io.cucumber:cucumber-spring:${cucumber_version}")
 
 
 	// ExtentReports
-	implementation 'tech.grasshopper:extentreports-cucumber7-adapter:1.14.0'
-	implementation 'com.aventstack:extentreports:5.1.1'
+	implementation ("tech.grasshopper:extentreports-cucumber7-adapter:${cucumber_adapter_version}")
+	implementation ("com.aventstack:extentreports:${extent_reports_version}")
 
 	// Log4j
-	implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
-	implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+	implementation ("org.apache.logging.log4j:log4j-core:${log4j_version}")
+	implementation ("org.apache.logging.log4j:log4j-api:${log4j_version}")
 }
 
 
