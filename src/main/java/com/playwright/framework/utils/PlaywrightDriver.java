@@ -1,7 +1,6 @@
 package com.playwright.framework.utils;
 
 import com.microsoft.playwright.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,6 @@ import java.util.Properties;
 @Component
 public class PlaywrightDriver {
 
-    public static PlaywrightDriver playwrightDriver;
     public static Properties OR = new Properties();
     @Value("${headless:false}")
     private String headless;
@@ -24,9 +22,7 @@ public class PlaywrightDriver {
     private String browserName;
     @Value("${video.recording:false}")
     private String isVideoRecording;
-
     private static FileInputStream fis;
-
     // ThreadLocal instances for parallel execution
     private static ThreadLocal<Playwright> pw = new ThreadLocal<>();
     private static ThreadLocal<Browser> br = new ThreadLocal<>();
