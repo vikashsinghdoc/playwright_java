@@ -46,7 +46,7 @@ public class PlaywrightDriver {
     public void playwrightDriverCreation() {
         try {
             // Load OR.properties
-            fis = new FileInputStream("src/main/resources/properties/OR.properties");
+            fis = new FileInputStream("src/main/resources/repositories/OR.properties");
             OR.load(fis);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load properties", e);

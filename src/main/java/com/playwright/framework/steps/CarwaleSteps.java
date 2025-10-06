@@ -1,7 +1,7 @@
 package com.playwright.framework.steps;
 
-import com.playwright.framework.base.CarBase;
 import com.playwright.framework.log.Log;
+import com.playwright.framework.pages.CarDetailsPage;
 import com.playwright.framework.pages.HomePage;
 import com.playwright.framework.pages.NewCarsPage;
 import com.playwright.framework.utils.PlaywrightDriver;
@@ -12,16 +12,14 @@ import org.springframework.beans.factory.annotation.Value;
 
 
 public class CarwaleSteps {
+    @Value("${base.url}")
+    private String appUrl;
     @Autowired
     private HomePage homePage;
     @Autowired
     private NewCarsPage newCarsPage;
     @Autowired
-    private CarBase carBase;
-   ;
-
-   @Value("${base.url}")
-   private String appUrl;
+    private CarDetailsPage carDetailsPage;
 
     @Given("user navigates to carlwale website")
     public void user_navigates_to_carlwale_website() {
@@ -33,7 +31,7 @@ public class CarwaleSteps {
         homePage.mouseOverNewCar();
     }
     @Given("user clicks on findnewcars link")
-    public void user_clicks_on_findnewcars_link() throws InterruptedException {
+    public void user_clicks_on_findnewcars_link() {
         homePage.clickFindNewCars();
     }
     @Given("user clicks on {string}")
@@ -56,8 +54,7 @@ public class CarwaleSteps {
     }
     @Given("User validates car title as {string}")
     public void user_validates_car_title_as(String carTitle) {
-        Assert.assertEquals(carTitle, carBase.getCarTitle());
+        Assert.assertEquals(carTitle, carDetailsPage.getCarTitle());
     }
-
 
 }
