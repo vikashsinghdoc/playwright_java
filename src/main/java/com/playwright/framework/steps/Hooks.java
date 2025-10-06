@@ -1,7 +1,7 @@
 package com.playwright.framework.steps;
 
 import com.playwright.framework.log.Log;
-import com.playwright.framework.utils.PlaywrightDriver;
+import com.playwright.framework.driver_manager.PlaywrightDriver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;

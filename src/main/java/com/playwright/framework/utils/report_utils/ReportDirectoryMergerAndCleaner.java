@@ -1,12 +1,13 @@
-package com.playwright.framework.reporting;
-
-import com.playwright.framework.log.Log;
+package com.playwright.framework.utils.report_utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
-public class FileMoverAndDeleteFolder {
+public class ReportDirectoryMergerAndCleaner {
 
     public static void main(String[] args) {
         Path targetRoot = Paths.get("target");

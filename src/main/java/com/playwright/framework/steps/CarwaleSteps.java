@@ -4,7 +4,7 @@ import com.playwright.framework.log.Log;
 import com.playwright.framework.pages.CarDetailsPage;
 import com.playwright.framework.pages.HomePage;
 import com.playwright.framework.pages.NewCarsPage;
-import com.playwright.framework.utils.PlaywrightDriver;
+import com.playwright.framework.driver_manager.PlaywrightDriver;
 import io.cucumber.java.en.Given;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.playwright.framework.utils;
+package com.playwright.framework.driver_manager;
 
 import com.microsoft.playwright.*;
 import com.playwright.framework.log.Log;

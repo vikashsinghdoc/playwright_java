@@ -6,7 +6,7 @@ import com.microsoft.playwright.options.SelectOption;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.Assert;
 import com.playwright.framework.log.Log;
-import com.playwright.framework.utils.PlaywrightDriver;
+import com.playwright.framework.driver_manager.PlaywrightDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +48,7 @@ public class BasePage {
             Log.pass("Element " + locatorKey + " is visible within " + timeoutMillis + " ms.");
             return true;
         } catch (Exception e) {
+            highlightElement(locatorKey, "red");
             Log.error("Element " + locatorKey + " not visible within " + timeoutMillis + " ms. " + e.getMessage());
             return false;
         }
@@ -96,15 +97,32 @@ public class BasePage {
             Assert.fail(tx.getMessage());
         }
     }
-    public void highlightElement(String locatorKey){
+    public Locator highlightElement(String locatorKey, String color) {
+        Locator element = null;
         try {
-            this.playwrightDriver.getPage().locator(PlaywrightDriver.OR.getProperty(locatorKey))
-                    .evaluate("element => element.style.border = '3px solid red'");
-            Log.info("Successfully highlighted element:"+locatorKey);
-        } catch (Throwable tx){
-            Log.error("Failed to highlight element:"+locatorKey);
-            Assert.fail(tx.getMessage());
+            element = playwrightDriver.getPage()
+                    .locator(PlaywrightDriver.OR.getProperty(locatorKey));
+
+            // Wait for the element to exist
+            element.waitFor(new Locator.WaitForOptions()
+                    .setState(WaitForSelectorState.ATTACHED)
+                    .setTimeout(2000));
+
+            // Highlight with border + transparent background
+            element.evaluate("el => {" +
+                    "el.style.border='3px solid " + color + "';" +
+                    "el.style.backgroundColor='" + color + "33';" +
+                    "}");
+
+            Log.info("Highlighted element '" + locatorKey + "' with color " + color);
+
+        } catch (Exception e) {
+            Log.warn("Could not highlight element '" + locatorKey + "': " + e.getMessage());
         }
+        return element;
+    }
+    public Locator highlightElement(String locatorKey) {
+        return highlightElement(locatorKey, "blue");
     }
     public void selectOptionFromDropdown(String locatorKeyDD, String locatorKeyOptions, String optionText) {
         click(locatorKeyDD);
@@ -137,6 +155,7 @@ public class BasePage {
     public boolean isTextMatching(String locatorKey, String expectedText, int timeoutMillis) {
         Locator element = playwrightDriver.getPage()
                 .locator(PlaywrightDriver.OR.getProperty(locatorKey));
+        highlightElement(locatorKey);
         element.waitFor(new Locator.WaitForOptions()
                 .setState(WaitForSelectorState.VISIBLE)
                 .setTimeout(timeoutMillis));
@@ -145,10 +164,10 @@ public class BasePage {
         if (matches) {
             Log.pass("Text matches for '" + locatorKey + "': '" + actualText + "'");
         } else {
+            highlightElement(locatorKey, "red");
             Log.error("Text mismatch for '" + locatorKey + "'. Expected: '"
                     + expectedText + "', Actual: '" + actualText + "'");
         }
-
         return matches;
     }
 
