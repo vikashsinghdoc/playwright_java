@@ -155,7 +155,8 @@ public class BasePage {
     public boolean isTextMatching(String locatorKey, String expectedText, int timeoutMillis) {
         Locator element = playwrightDriver.getPage()
                 .locator(PlaywrightDriver.OR.getProperty(locatorKey));
-        highlightElement(locatorKey).waitFor(new Locator.WaitForOptions()
+        highlightElement(locatorKey);
+        element.waitFor(new Locator.WaitForOptions()
                 .setState(WaitForSelectorState.VISIBLE)
                 .setTimeout(timeoutMillis));
         String actualText = element.innerText().trim();
