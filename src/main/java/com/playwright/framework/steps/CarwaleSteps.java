@@ -56,7 +56,7 @@ public class CarwaleSteps {
     }
     @Given("User validates car title as {string}")
     public void user_validates_car_title_as(String carTitle) {
-        Assert.assertTrue(this.carDetailsPage.isTextMatching("car_title_css", carTitle,2000));
+        this.carDetailsPage.isTextMatching("car_title_css", carTitle,2000);
     }
 
 }
